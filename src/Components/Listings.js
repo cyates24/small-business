@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete"
 import { Link } from "react-router-dom";
+import checkAuth from '../Components/checkAuth'
 
-const Listings = props => {
-  console.log(props.listings);
+const Listings = ({listings, deleteListing},props) => {
   return (
     <Container maxWidth="lg" className="car-container">
       <Table>
@@ -24,19 +24,20 @@ const Listings = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.listings.map((listings, idx) => (
-            <TableRow key={listings.name}>
+          {listings.map((listing, idx) => (
+            <TableRow key={idx}>
               <TableCell>
-               <Link to={`/details/${listings.id}`}>{listings.name}</Link>
+              <TableCell component={Link} to={`/details/${listing.id}`}>{listing.name}</TableCell>
                </TableCell>
-              <TableCell>{listings.description}</TableCell>
-              <TableCell>{listings.address}</TableCell>
-              <TableCell>{listings.hours}</TableCell>
+              <TableCell>{listing.description}</TableCell>
+              <TableCell>{listing.address}</TableCell>
+              <TableCell>{listing.hours}</TableCell>
               <TableCell>
-                <DeleteIcon
-                        // add onClick method here
-                        onClick={() => props.removeCar(idx)}
-                        className="icon text-red" />
+              {checkAuth() &&
+                  <TableCell align='center'>
+                    <DeleteIcon color='error' onClick={() => deleteListing(idx)} />
+                  </TableCell>
+                }
               </TableCell>
             </TableRow>
           ))}
